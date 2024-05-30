@@ -18,5 +18,5 @@ model User {
   username String @unique
   password String
   name String
-  profilepic String
+  profilepicture String
 }
