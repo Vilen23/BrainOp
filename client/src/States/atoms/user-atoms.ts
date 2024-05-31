@@ -1,5 +1,6 @@
 import { atom } from "recoil";
-
+import { recoilPersist } from "recoil-persist";
+const { persistAtom } = recoilPersist();
 export const signupAtom = atom({
     key:"signupAtom",
     default:{
@@ -11,3 +12,12 @@ export const signupAtom = atom({
     }
 })
 
+export const userAtom = atom({
+    key:"userAtom",
+    default:{
+        username:"",
+        profilepicture:"",
+        name:""
+    },
+    effects_UNSTABLE: [persistAtom]
+})

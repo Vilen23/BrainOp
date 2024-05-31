@@ -1,6 +1,31 @@
-import SigninForm from '../Components/SigninForm'
+import { useEffect } from 'react'
+import SigninForm from '../components/SigninForm'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const verifyUser = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/verify`,{withCredentials:true});
+      if(response.status === 200){
+        navigate('/feed');
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  }
+
+  useEffect(()=>{
+    try {
+      verifyUser();
+    } catch (error) {
+      console.log(error);
+      return ;
+    }
+  },[])
   return (
     <div className='flex px-20 justify-center  items-center'>
         <div className='bg-white w-[90vw] h-[80vh] rounded-[50px] grid grid-cols-2 place-items-center'>

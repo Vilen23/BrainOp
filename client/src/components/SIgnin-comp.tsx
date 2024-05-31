@@ -4,6 +4,8 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Alert from "./ui/Alert";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userAtom } from "../States/atoms/user-atoms";
 
 interface SigninProps {
   username: string;
@@ -16,9 +18,10 @@ export default function SIgnincomp() {
   const [signin, setSignin] = useState<SigninProps>({
     username: "",
     password: "",
-  });
-  const [isTandCChecked, setIsTandCChecked] = useState(false);
+  });;
   const navigate = useNavigate();
+  const [user,setUser] = useRecoilState(userAtom);
+
 
   const handleSignin = async () => {
     try {
@@ -32,8 +35,9 @@ export default function SIgnincomp() {
         { withCredentials: true }
       );
       if (response.status === 200) {
+        setUser(response.data.user);
         setError("");
-        navigate("/feed");
+        window.location.href = "/feed";
       }
     } catch (error) {
       //@ts-ignore
@@ -96,24 +100,13 @@ export default function SIgnincomp() {
         </button>
       </div>
 
-      <div className="flex items-center bg-white gap-2">
-        <input
-          type="checkbox"
-          id="TandC"
-          checked={isTandCChecked}
-          onChange={(e) => setIsTandCChecked(e.target.checked)}
-        />
-        <label htmlFor="TandC" className="text-sm bg-white">
-          Accept Terms and condition
-        </label>
-      </div>
       {error && <Alert error={error} />}
       <button
         className="w-[250px] bg-[#8A6FF0] text-white rounded-[50px] py-2 font-bold"
         onClick={handleSignin}
         onSubmit={handleSignin}
       >
-        Sign up
+        Log In
       </button>
     </div>
   );
