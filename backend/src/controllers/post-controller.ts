@@ -18,3 +18,24 @@ export const fetchPosts = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const createPost = async (req: Request, res: Response) => {
+  try {
+    const { title, picture, content } = req.body;
+    const  user  = req.user;
+    if(title === "" && picture === "" && content === "") return res.status(400).json({error: "Invalid Inputs"});
+    const post = await db.post.create({
+      data: {
+        title,
+        picture,
+        content,
+        authorId: user.userid,
+      },
+    });
+    if(!post) return res.status(400).json({error: "Post not created"});
+    return res.status(201).json({ message: "Post created" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

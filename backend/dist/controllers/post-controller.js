@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPosts = void 0;
+exports.createPost = exports.fetchPosts = void 0;
 const db_1 = __importDefault(require("../utils/db"));
 const fetchPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -33,3 +33,27 @@ const fetchPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.fetchPosts = fetchPosts;
+const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { title, picture, content } = req.body;
+        const user = req.user;
+        if (title === "" && picture === "" && content === "")
+            return res.status(400).json({ error: "Invalid Inputs" });
+        const post = yield db_1.default.post.create({
+            data: {
+                title,
+                picture,
+                content,
+                authorId: user.userid,
+            },
+        });
+        if (!post)
+            return res.status(400).json({ error: "Post not created" });
+        return res.status(201).json(post);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.createPost = createPost;

@@ -26,6 +26,7 @@ model Post {
   id String @default(uuid()) @id
   title String
   content String
+  picture String
   author User @relation(fields: [authorId], references: [id])
   authorId String
   createdAt DateTime @default(now())

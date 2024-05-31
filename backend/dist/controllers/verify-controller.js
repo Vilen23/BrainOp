@@ -12,25 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = void 0;
+exports.verifyUser = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const verifyToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.cookies.authToken;
-        console.log(token);
         if (!token)
             return res.status(401).json({ error: "Unauthorized" });
         const decode = jsonwebtoken_1.default.verify(token, process.env.SECRET || "");
         if (!decode)
             return res.status(401).json({ error: "Unauthorized" });
-        req.user = decode;
-        next();
+        return res.status(200).json({ message: "Authorized" });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Internal server error" });
     }
 });
-exports.verifyToken = verifyToken;
+exports.verifyUser = verifyUser;
