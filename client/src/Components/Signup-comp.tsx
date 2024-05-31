@@ -2,30 +2,42 @@ import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useRecoilState } from "recoil";
 import { signupAtom } from "../States/atoms/user-atoms";
-import axios from "axios";   
+import axios from "axios";
 import Alert from "./ui/Alert";
+import { loginState } from "../States/atoms/signin-signup";
 
 export default function Signupcomp() {
   const [eye, setEye] = useState(false);
+  const [error, setError] = useState("");
   const [eyeConf, setEyeConf] = useState(false);
+  const [type,setType] = useRecoilState(loginState);
   const [signup, setSignup] = useRecoilState(signupAtom);
-  const [error,setError] = useState("");
-  const handleSubmit = async() => {
-    try {
-      console.log("heelo")
-      const response = await axios.post(`http://localhost:8000/api/auth/signup`, signup);
-      console.log(response.data);
-      if(response.status === 200){
+  const [isTandCChecked, setIsTandCChecked] = useState(false);
 
+  const handleSubmit = async () => {
+    if (!isTandCChecked) {
+      setError("You must accept the terms and conditions.");
+      return;
+    }
+    try {
+      console.log("Hello");
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/signup`,
+        signup
+      );
+      if (response.status === 200) {
+        setError("");
+        setType("signin");
       }
     } catch (error) {
       //@ts-ignore
-      setError(error.response.data.error);
+      setError(error.response?.data?.error || "An error occurred");
       return;
     }
-  }
+  };
+
   return (
-    <div className="Form flex flex-col items-center justify-center bg-white gap-4">
+    <div className="Form flex flex-col items-center justify-center bg-white gap-2">
       <div className="bg-white">
         <label htmlFor="ProfilePicture" className="bg-white">
           <img
@@ -37,7 +49,7 @@ export default function Signupcomp() {
         <input
           type="file"
           placeholder="Choose profile picture"
-          className=" hidden"
+          className="hidden"
           id="ProfilePicture"
           onChange={(e) => {
             setSignup((prev) => ({
@@ -45,7 +57,7 @@ export default function Signupcomp() {
               profilepicture: e.target.value,
             }));
           }}
-          onClick={()=>{
+          onClick={() => {
             setError("");
           }}
         />
@@ -65,7 +77,7 @@ export default function Signupcomp() {
               name: e.target.value,
             }));
           }}
-          onClick={()=>{
+          onClick={() => {
             setError("");
           }}
         />
@@ -86,11 +98,10 @@ export default function Signupcomp() {
               username: e.target.value,
             }));
           }}
-          onClick={()=>{
+          onClick={() => {
             setError("");
           }}
         />
-        {error && <Alert error={error}/> }
       </div>
       <div className="bg-white flex flex-col relative">
         <label htmlFor="password" className="bg-white text-sm px-2">
@@ -107,7 +118,7 @@ export default function Signupcomp() {
               password: e.target.value,
             }));
           }}
-          onClick={()=>{
+          onClick={() => {
             setError("");
           }}
         />
@@ -138,7 +149,7 @@ export default function Signupcomp() {
               confirmpassword: e.target.value,
             }));
           }}
-          onClick={()=>{
+          onClick={() => {
             setError("");
           }}
         />
@@ -154,9 +165,22 @@ export default function Signupcomp() {
           )}
         </button>
       </div>
-      <button className="w-[250px] bg-[#8A6FF0] text-white rounded-[50px] py-2 font-bold"
-      onSubmit={handleSubmit}
-      onClick={handleSubmit}
+      <div className="flex items-center bg-white gap-2">
+        <input
+          type="checkbox"
+          id="TandC"
+          checked={isTandCChecked}
+          onChange={(e) => setIsTandCChecked(e.target.checked)}
+        />
+        <label htmlFor="TandC" className="text-sm bg-white">
+          Accept Terms and condition
+        </label>
+      </div>
+      {error && <Alert error={error} />}
+      <button
+        className="w-[250px] bg-[#8A6FF0] text-white rounded-[50px] py-2 font-bold"
+        onSubmit={handleSubmit}
+        onClick={handleSubmit}
       >
         Sign up
       </button>

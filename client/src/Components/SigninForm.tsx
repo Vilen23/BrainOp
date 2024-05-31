@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Signupcomp from "./Signup-comp";
 import SIgnincomp from "./SIgnin-comp";
+import { useRecoilState } from "recoil";
+import { loginState } from "../States/atoms/signin-signup";
 
 export default function SigninForm() {
-  const [type, setType] = useState("signup");
+  const [type, setType] = useRecoilState(loginState);
   return (
     <div className="bg-white">
       <div className="flex flex-col items-center justify-center bg-white">
