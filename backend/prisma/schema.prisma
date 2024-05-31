@@ -19,4 +19,14 @@ model User {
   password String
   name String
   profilepicture String
+  posts Post[]
+}
+
+model Post {
+  id String @default(uuid()) @id
+  title String
+  content String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  createdAt DateTime @default(now())
 }
