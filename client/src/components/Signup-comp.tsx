@@ -1,21 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useRecoilState } from "recoil";
 import { signupAtom } from "../States/atoms/user-atoms";
 import axios from "axios";
 import Alert from "./ui/Alert";
 import { loginState } from "../States/atoms/signin-signup";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../lib/firebase";
 
 export default function Signupcomp() {
   const [eye, setEye] = useState(false);
   const [error, setError] = useState("");
   const [eyeConf, setEyeConf] = useState(false);
-  const [type,setType] = useRecoilState(loginState);
+  const [type, setType] = useRecoilState(loginState);
   const [signup, setSignup] = useRecoilState(signupAtom);
   const [isTandCChecked, setIsTandCChecked] = useState(false);
+  const [image, setImage] = useState("");
+  const [imageurl, setImageurl] = useState("");
+  const [uploadImage, setuploadImage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingcomplete, setloadingcomplete] = useState(false);
 
   const handleSubmit = async () => {
-    if(signup.username==="" || signup.password==="" || signup.confirmpassword===""){
+    if (
+      signup.username === "" ||
+      signup.password === "" ||
+      signup.confirmpassword === ""
+    ) {
       setError("Please fill all the fields");
       return;
     }
@@ -24,7 +40,6 @@ export default function Signupcomp() {
       return;
     }
     try {
-      console.log("Hello");
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/signup`,
         signup
@@ -40,27 +55,83 @@ export default function Signupcomp() {
     }
   };
 
+  useEffect(() => {
+    if (uploadImage && image) upload();
+    else if (uploadImage) setError("Please select an image");
+  }, [uploadImage]);
+
+  const HandleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("hewrk")
+    setuploadImage(false);
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setError("Please upload an image");
+        return;
+      }
+      if (file.size > 2000000) {
+        setError("Please upload an image of size less than 2MB");
+        return;
+      }
+      //@ts-ignore
+      setImage(file);
+      setImageurl(URL.createObjectURL(file));
+      setuploadImage(true);
+    }
+  };
+
+  const upload = async () => {
+    const storage = getStorage(app);
+    //@ts-ignore
+    const filename = new Date().getTime().toString() + image.name;
+    const storageRef = ref(storage, filename);
+    //@ts-ignore
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setloadingcomplete(false);
+        setLoading(true);
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        setError("Size should be less than 2Mb");
+        console.log(error);
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setImageurl(downloadURL);
+        console.log(downloadURL);
+        setSignup((prev) => ({ ...prev, profilepicture: downloadURL }));
+        setLoading(false);
+        setloadingcomplete(true);
+      }
+    );
+  };
   return (
     <div className="Form flex flex-col items-center justify-center bg-white gap-2">
       <div className="bg-white">
         <label htmlFor="ProfilePicture" className="bg-white">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF0QxSZCjz-8JefhrJrJwtL5i7utqDsRhv7Q&s"
+          
+            src={
+              imageurl ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF0QxSZCjz-8JefhrJrJwtL5i7utqDsRhv7Q&s"
+            }
             alt="profilepicture"
-            className="h-20 rounded-full border-2 border-black/60 p-1 bg-white "
+            className="h-20 w-20 object-cover rounded-full border-2 border-black/60 p-1 bg-white "
           />
         </label>
         <input
+          accept="image/*"
           type="file"
           placeholder="Choose profile picture"
           className="hidden"
           id="ProfilePicture"
-          onChange={(e) => {
-            setSignup((prev) => ({
-              ...prev,
-              profilepicture: e.target.value,
-            }));
-          }}
+          onChange={HandleImageUpload}
           onClick={() => {
             setError("");
           }}
@@ -180,9 +251,7 @@ export default function Signupcomp() {
           Accept Terms and condition
         </label>
       </div>
-      <div className="bg-white">
-      {error && <Alert error={error} />}
-      </div>
+      <div className="bg-white">{error && <Alert error={error} />}</div>
       <button
         className="w-[250px] bg-[#8A6FF0] text-white rounded-[50px] py-2 font-bold"
         onSubmit={handleSubmit}

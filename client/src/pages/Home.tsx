@@ -13,6 +13,7 @@ export default function Home() {
         navigate('/feed');
       }
     } catch (error) {
+      navigate('/');
       console.log(error);
       return;
     }

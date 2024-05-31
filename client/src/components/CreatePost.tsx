@@ -1,9 +1,15 @@
 import { motion } from "framer-motion";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../lib/firebase";
 interface CreatePostProps {
   title: string;
   picture: string;
@@ -18,6 +24,11 @@ export default function CreatePost() {
   });
   const [loadingPublish, setLoadingPublish] = useState(false);
   const [error, setError] = useState("");
+  const [image, setImage] = useState("");
+  const [imageurl, setImageurl] = useState("");
+  const [uploadImage, setuploadImage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingcomplete, setloadingcomplete] = useState(false);
 
   const handlePublish = async () => {
     try {
@@ -29,6 +40,7 @@ export default function CreatePost() {
       if (response.status === 201) {
         setLoadingPublish(false);
         setError("");
+        window.location.href = "/feed";
       }
     } catch (error) {
       console.log(error);
@@ -38,6 +50,60 @@ export default function CreatePost() {
     }
   };
 
+  useEffect(() => {
+    if (uploadImage && image) upload();
+    else if (uploadImage) setError("Please select an image");
+  }, [uploadImage]);
+
+  const HandleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setuploadImage(false);
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        setError("Please upload an image");
+        return;
+      }
+      if (file.size > 2000000) {
+        setError("Please upload an image of size less than 2MB");
+        return;
+      }
+      //@ts-ignore
+      setImage(file);
+      setImageurl(URL.createObjectURL(file));
+    }
+  };
+
+  const upload = async () => {
+    const storage = getStorage(app);
+    //@ts-ignore
+    const filename = new Date().getTime().toString() + image.name;
+    const storageRef = ref(storage, filename);
+    //@ts-ignore
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setloadingcomplete(false);
+        setLoading(true);
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        setError("Size should be less than 2Mb");
+        console.log(error);
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setImageurl(downloadURL);
+        console.log(downloadURL);
+        setPost((prev) => ({ ...prev, picture: downloadURL }));
+        setLoading(false);
+        setloadingcomplete(true);
+      }
+    );
+  };
   return (
     <div className="flex justify-center pt-[20px] font-roboto">
       <div className="md:w-[600px] w-[90vw] flex flex-col items-center">
@@ -66,7 +132,7 @@ export default function CreatePost() {
             }}
             className="bg-[#8A6FF0] px-4 py-2 rounded-[10px] font-bold text-white "
           >
-            Publish
+            {loadingPublish ? "Publishing" : "Publish"}
           </motion.button>
         </div>
         <div className="flex w-full mb-2 gap-3">
@@ -80,16 +146,18 @@ export default function CreatePost() {
               stiffness: 100,
             }}
             className="bg-[#8A6FF0] px-4 py-2 rounded-[10px] font-bold text-white "
+            onClick={() => {
+              setuploadImage(true);
+            }}
           >
-            Upload
+            {loading ? "Uploading" : loadingcomplete ? "Uploaded" : "Upload"}
           </motion.button>
           <Input
-            onChange={(e) =>
-              setPost((prev) => ({ ...prev, picture: e.target.value }))
-            }
+            onChange={HandleImageUpload}
             id="picture"
             type="file"
             className="border-[3px] p-2 border-[#AE9DF6]"
+            accept="image/*"
           />
         </div>
         <div className="w-full">
