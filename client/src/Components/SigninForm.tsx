@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Signupcomp from "./Signup-comp";
 import SIgnincomp from "./SIgnin-comp";
 import { useRecoilState } from "recoil";

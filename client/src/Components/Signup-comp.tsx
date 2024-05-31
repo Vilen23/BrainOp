@@ -15,6 +15,10 @@ export default function Signupcomp() {
   const [isTandCChecked, setIsTandCChecked] = useState(false);
 
   const handleSubmit = async () => {
+    if(signup.username==="" || signup.password==="" || signup.confirmpassword===""){
+      setError("Please fill all the fields");
+      return;
+    }
     if (!isTandCChecked) {
       setError("You must accept the terms and conditions.");
       return;
@@ -176,7 +180,9 @@ export default function Signupcomp() {
           Accept Terms and condition
         </label>
       </div>
+      <div className="bg-white">
       {error && <Alert error={error} />}
+      </div>
       <button
         className="w-[250px] bg-[#8A6FF0] text-white rounded-[50px] py-2 font-bold"
         onSubmit={handleSubmit}

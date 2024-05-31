@@ -3,9 +3,10 @@ import './App.css'
 import Navbar from './Components/Navbar'
 import Home from './pages/Home'
 import Feed from './pages/Feed'
+import axios from 'axios'
 
 function App() {
-
+  axios.defaults.withCredentials = true;
   return (
     <div className=''>
       <Navbar/>
