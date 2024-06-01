@@ -34,8 +34,8 @@ export default function SigninForm() {
             Sign Up
           </button>
         </div>
-      </div>
       {type==="signup" ? <Signupcomp/> : <SIgnincomp/>}
+      </div>
     </div>
   );
 }

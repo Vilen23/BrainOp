@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <div
-      className="h-[80px] text-5xl font-bold flex justify-center items-center allura-regular relative
+      className="h-[80px] text-5xl font-bold flex justify-between px-10 items-center allura-regular 
     "
     >
       {isuser && (
@@ -41,13 +41,13 @@ export default function Navbar() {
             stiffness: 100,
           }}
           whileTap={{ scale: 0.9 }}
-          className="text-sm font-bold roboto-bold absolute left-10 text-white bg-black px-3 py-2 rounded-[50px] hover:bg-black/80"
+          className="text-xs md:text-sm font-bold roboto-bold  md:right-10 text-white bg-black px-3 py-2 rounded-[50px] hover:bg-black/80"
           onClick={handleLogout}
         >
           Log Out
         </motion.button>
       )}
-      Melody
+      <p className="text-5xl w-full flex justify-center">Melody</p>
       {onfeed && (
         <motion.button
           initial={{ opacity: 0, x: -100 }}
@@ -60,7 +60,7 @@ export default function Navbar() {
             stiffness: 100,
           }}
           whileTap={{ scale: 0.9 }}
-          className="text-sm font-bold roboto-bold absolute right-10 text-white bg-black px-3 py-2 rounded-[50px] hover:bg-black/80"
+          className="text-xs md:text-sm font-bold roboto-bold  md:right-10 text-white bg-black px-3 py-2 rounded-[50px] hover:bg-black/80"
           onClick={() => {
             window.location.href = "/feed/createPost";
           }}

@@ -34,6 +34,7 @@ export default function SIgnincomp() {
         signin,
         { withCredentials: true }
       );
+      console.log(response);
       if (response.status === 200) {
         setUser(response.data.user);
         setError("");

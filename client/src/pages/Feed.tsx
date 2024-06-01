@@ -75,11 +75,11 @@ export default function Feed() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleScroll]);
+  }, []);
 
   return (
-    <div className="flex justify-center w-[100vw]">
-      <div className="flex flex-col items-center justify-center bg-white p-10 min-w-[500px] min-h-screen gap-10">
+    <div className="flex justify-center w-[99vw]">
+      <div className="flex flex-col items-center justify-center bg-white p-10 w-[90vw] md:w-[500px] min-h-screen gap-10">
         {posts.map((post, index) => (
           <Card
             key={index}
@@ -97,7 +97,7 @@ export default function Feed() {
 
 const Card = ({ author, title, content, picture }: PostProps) => {
   return (
-    <div className="card bg-white flex flex-col items-center gap-4 border-b-1 w-[400px]">
+    <div className="card bg-white flex flex-col items-center gap-4 border-b-1 md:w-[400px]">
       <div className="card-header flex items-center bg-white gap-2  w-full">
         <img
           src={
@@ -105,20 +105,20 @@ const Card = ({ author, title, content, picture }: PostProps) => {
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF0QxSZCjz-8JefhrJrJwtL5i7utqDsRhv7Q&s"
           }
           alt="profile"
-          className="bg-white h-[50px] w-[50px] rounded-full shadow-xl object-cover"
+          className="bg-white h-[40px] w-[40px] md:h-[50px] md:w-[50px] rounded-full shadow-xl object-cover"
         />
-        <h3 className="bg-white font-roboto text-xl font-bold text-black/70 line-clamp-1">
+        <h3 className="bg-white font-roboto text-lg md:text-xl font-bold text-black/70 line-clamp-1">
           {author.username}
         </h3>
       </div>
       <h2 className="bg-white w-full font-bold text-2xl font-roboto capitalize">{title}</h2>
       <img
-        className="bg-white border-[3px] border-black w-[400px]"
+        className="bg-white border-[3px] border-black w-[350px]  md:w-[400px]"
         src={picture}
         alt="post"
       />
       <div className="card-body bg-white w-full">
-        <p className="bg-white w-full text-md px-2 text-gray-700 font-roboto" style={{lineHeight:1.3}}>{content}</p>
+        <p className="bg-white w-full text-sm md:text-lg px-2 text-gray-700 font-roboto" style={{lineHeight:1.3}}>{content}</p>
       </div>
     </div>
   );
