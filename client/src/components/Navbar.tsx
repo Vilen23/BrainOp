@@ -47,7 +47,7 @@ export default function Navbar() {
           Log Out
         </motion.button>
       )}
-      <p className="text-5xl md:w-full flex justify-center">Melody</p>
+      <p className="text-5xl md:w-fit flex justify-center">Melody</p>
       {onfeed && (
         <motion.button
           initial={{ opacity: 0, x: -100 }}
