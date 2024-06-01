@@ -59,6 +59,8 @@ export const signin = async (req: Request, res: Response) => {
     });
     res.cookie("authToken", token,{
       expires: new Date(Date.now() + 3600000),
+      sameSite:"none",
+      secure:true
     });
     const { password: _, ...userWithoutPassword } = checkUser;
     return res
