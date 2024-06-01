@@ -3,8 +3,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 import axios from "axios";
 import Alert from "./ui/Alert";
-import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import {  useSetRecoilState } from "recoil";
 import { userAtom } from "../States/atoms/user-atoms";
 
 interface SigninProps {
@@ -19,8 +18,7 @@ export default function SIgnincomp() {
     username: "",
     password: "",
   });;
-  const navigate = useNavigate();
-  const [user,setUser] = useRecoilState(userAtom);
+  const setUser = useSetRecoilState(userAtom);
 
 
   const handleSignin = async () => {

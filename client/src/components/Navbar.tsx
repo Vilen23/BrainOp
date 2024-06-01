@@ -1,5 +1,4 @@
 import { isUserAtom } from "@/States/atoms/user-atoms";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";

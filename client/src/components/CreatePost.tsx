@@ -10,6 +10,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../lib/firebase";
+import Alert from "./ui/Alert";
 interface CreatePostProps {
   title: string;
   picture: string;
@@ -86,6 +87,7 @@ export default function CreatePost() {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress)
         setloadingcomplete(false);
         setLoading(true);
       },
@@ -96,6 +98,7 @@ export default function CreatePost() {
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setImageurl(downloadURL);
+        console.log(imageurl)
         setPost((prev) => ({ ...prev, picture: downloadURL }));
         setLoading(false);
         setloadingcomplete(true);
@@ -108,6 +111,7 @@ export default function CreatePost() {
         <h1 className="font-extrabold text-4xl my-2 roboto-bold">
           Create Post
         </h1>
+        {error && <Alert error={error} />}
         <div className="flex w-full my-2 gap-2">
           <input
             onChange={(e) =>

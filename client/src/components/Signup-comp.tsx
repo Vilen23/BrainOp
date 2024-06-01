@@ -54,6 +54,7 @@ export default function Signupcomp() {
     } catch (error) {
       //@ts-ignore
       setError(error.response?.data?.error || "Too many requests, please try again after 5 minutes");
+      console.log(type,loading,loadingcomplete)
       return;
     }
   };
@@ -95,6 +96,7 @@ export default function Signupcomp() {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress)
         setloadingcomplete(false);
         setLoading(true);
       },
