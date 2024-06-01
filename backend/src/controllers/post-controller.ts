@@ -16,6 +16,9 @@ export const fetchPosts = async (req: Request, res: Response) => {
             profilepicture:true
           }
         }
+      },
+      orderBy:{
+        createdAt:"desc"
       }
     });
     const totalPosts = await db.post.count();
