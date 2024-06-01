@@ -18,8 +18,6 @@ export default function Feed() {
   const [posts, setPosts] = useState<PostProps[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [totalPosts, setTotalPosts] = useState(0);
 
   const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
@@ -45,9 +43,15 @@ export default function Feed() {
         }
       );
       if (response.status === 200) {
-        setPosts((prevPosts) => [...prevPosts, ...response.data.posts]);
-        setTotalPosts(response.data.totalPosts);
-        setHasMore(response.data.posts.length > 0 && posts.length < response.data.totalPosts);
+        const fetchedPosts = response.data.posts;
+        // If the fetched posts are less than the limit, we know we've hit the end
+        if (fetchedPosts.length < 10) {
+          // Reset page to 1 to create a looping effect
+          setPage(1);
+        } else {
+          setPage((prevPage) => prevPage + 1);
+        }
+        setPosts((prevPosts) => [...prevPosts, ...fetchedPosts]);
       }
     } catch (error) {
       console.log(error);
@@ -58,14 +62,14 @@ export default function Feed() {
   };
 
   const handleScroll = useCallback(throttle(() => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 200 && !loading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 200 && !loading) {
+      fetchPosts(page);
     }
-  }, 200), [loading, hasMore]);
+  }, 200), [loading, page]);
 
   useEffect(() => {
     fetchPosts(page);
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -86,8 +90,7 @@ export default function Feed() {
             picture={post.picture}
           />
         ))}
-        {loading && <p className="bg-white">Loading more posts...</p>}
-        {!hasMore && <p className="bg-white">No more posts to load.</p>}
+        {loading && <p>Loading more posts...</p>}
       </div>
     </div>
   );
