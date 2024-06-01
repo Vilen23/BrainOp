@@ -57,9 +57,9 @@ export const signin = async (req: Request, res: Response) => {
     const token = jwt.sign({ userid: checkUser.id }, process.env.SECRET || "", {
       expiresIn: "1h",
     });
-    res.cookie("authToken", token);
-    
-
+    res.cookie("authToken", token,{
+      expires: new Date(Date.now() + 3600000),
+    });
     const { password: _, ...userWithoutPassword } = checkUser;
     return res
       .status(200)
