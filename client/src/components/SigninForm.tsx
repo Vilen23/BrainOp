@@ -8,7 +8,7 @@ export default function SigninForm() {
   return (
     <div className="bg-white">
       <div className="flex flex-col items-center justify-center bg-white">
-        <h1 className="bg-white font-bold font-roboto text-4xl">Welcome</h1>
+        <h1 className="bg-white font-bold font-roboto text-3xl">Welcome</h1>
         <p className="bg-white text-sm text-gray-600 font-roboto">
           Please enter your details to proceed further
         </p>

@@ -44,13 +44,16 @@ export default function Signupcomp() {
         `${import.meta.env.VITE_API_URL}/api/auth/signup`,
         signup
       );
+      if(response.status === 429){
+        setError("Too many accounts created from this IP, please try again after 5 minutes");
+      }
       if (response.status === 200) {
         setError("");
         setType("signin");
       }
     } catch (error) {
       //@ts-ignore
-      setError(error.response?.data?.error || "An error occurred");
+      setError(error.response?.data?.error || "Too many requests, please try again after 5 minutes");
       return;
     }
   };
