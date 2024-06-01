@@ -1,4 +1,5 @@
 import { isUserAtom } from "@/States/atoms/user-atoms";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -16,11 +17,12 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      document.cookie =
-        "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      window.location.href = "/";
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`); // Assuming your backend is on the same domain
       localStorage.removeItem("recoil-persist");
-    } catch (error) {}
+      window.location.href = "/";
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
