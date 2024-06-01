@@ -9,7 +9,7 @@ import rateLimit from "express-rate-limit";
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://brain-op-xi.vercel.app",
     credentials: true,
   })
 );
