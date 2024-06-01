@@ -88,7 +88,6 @@ export default function CreatePost() {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setloadingcomplete(false);
         setLoading(true);
-        console.log("Upload is " + progress + "% done");
       },
       (error) => {
         setError("Size should be less than 2Mb");
@@ -97,7 +96,6 @@ export default function CreatePost() {
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setImageurl(downloadURL);
-        console.log(downloadURL);
         setPost((prev) => ({ ...prev, picture: downloadURL }));
         setLoading(false);
         setloadingcomplete(true);

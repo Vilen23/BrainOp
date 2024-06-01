@@ -21,3 +21,8 @@ export const userAtom = atom({
     },
     effects_UNSTABLE: [persistAtom]
 })
+
+export const isUserAtom = atom({
+    key:"isUserAtom",
+    default:false
+})

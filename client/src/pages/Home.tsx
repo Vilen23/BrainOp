@@ -2,15 +2,19 @@ import { useEffect } from 'react'
 import SigninForm from '../components/SigninForm'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isUserAtom } from '@/States/atoms/user-atoms';
 
 export default function Home() {
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(isUserAtom);
 
   const verifyUser = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/verify`,{withCredentials:true});
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/verify`,{headers:{'Authorization':`${document.cookie}`}});
       if(response.status === 200){
-        navigate('/feed');
+        setUser(true);
+        window.location.href = '/feed';
       }
     } catch (error) {
       navigate('/');

@@ -64,7 +64,6 @@ export default function Signupcomp() {
   }, [uploadImage]);
 
   const HandleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("hewrk")
     setuploadImage(false);
     const file = e.target.files?.[0];
     if (file) {
@@ -98,7 +97,6 @@ export default function Signupcomp() {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setloadingcomplete(false);
         setLoading(true);
-        console.log("Upload is " + progress + "% done");
       },
       (error) => {
         setError("Size should be less than 2Mb");
@@ -107,7 +105,6 @@ export default function Signupcomp() {
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setImageurl(downloadURL);
-        console.log(downloadURL);
         setSignup((prev) => ({ ...prev, profilepicture: downloadURL }));
         setLoading(false);
         setloadingcomplete(true);
