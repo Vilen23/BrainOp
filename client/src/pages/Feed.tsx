@@ -29,10 +29,6 @@ export default function Feed() {
     try {
       setLoading(true);
       const token = getCookie("authToken");
-      if (!token) {
-        window.location.href = "/";
-        return;
-      }
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/posts/getPosts`,
         {
