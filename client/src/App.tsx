@@ -14,8 +14,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/feed' element={<Feed/>}/>
-        <Route path='*' element={<div>404</div>}/>
         <Route path='/feed/createPost' element={<Post/>}/>
+        <Route path='*' element={<div>404</div>}/>
       </Routes>
     </div>
   )
