@@ -58,6 +58,7 @@ export const signin = async (req: Request, res: Response) => {
       expiresIn: "1h",
     });
     res.cookie("authToken", token);
+    
 
     const { password: _, ...userWithoutPassword } = checkUser;
     return res
