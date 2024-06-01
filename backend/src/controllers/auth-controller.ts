@@ -74,3 +74,14 @@ export const signin = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("authToken",{path:"/",sameSite:"none",secure:true});
+    return res.status(200).json({ message: "User has logged out" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
