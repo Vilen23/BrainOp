@@ -9,6 +9,14 @@ export const fetchPosts = async (req: Request, res: Response) => {
     const posts = await db.post.findMany({
       skip,
       take: limit,
+      include: {
+        author:{
+          select:{
+            username:true,
+            profilepicture:true
+          }
+        }
+      }
     });
     const totalPosts = await db.post.count();
     const totalPages = Math.ceil(totalPosts / limit);
