@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
-import throttle from 'lodash/throttle';
+import throttle from "lodash/throttle";
 import { useSetRecoilState } from "recoil";
 import { isUserAtom } from "@/States/atoms/user-atoms";
+import { verify } from "crypto";
 
 interface PostProps {
   author: {
@@ -18,7 +19,32 @@ export default function Feed() {
   const [posts, setPosts] = useState<PostProps[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const setIsUser = useSetRecoilState(isUserAtom);
+  const [isUser, setIsUser] = useState(false);
+
+  useEffect(() => {
+    verifyUser();
+
+  }, []);
+
+  const verifyUser = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/verify`,
+        {
+          headers: {
+            Authorization: `${getCookie("authToken")}`,
+          },
+        }
+      );
+      console.log(response)
+      if (response.status === 200) {
+        setIsUser(true);
+      }
+    } catch (error) {
+      console.log(error);
+      window.location.href = "/";
+    }
+  };
   const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -56,11 +82,18 @@ export default function Feed() {
     }
   };
 
-  const handleScroll = useCallback(throttle(() => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 200 && !loading) {
-      fetchPosts(page);
-    }
-  }, 200), [loading, page]);
+  const handleScroll = useCallback(
+    throttle(() => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.scrollHeight - 200 &&
+        !loading
+      ) {
+        fetchPosts(page);
+      }
+    }, 200),
+    [loading, page]
+  );
 
   useEffect(() => {
     fetchPosts(page);
@@ -107,14 +140,21 @@ const Card = ({ author, title, content, picture }: PostProps) => {
           {author.username}
         </h3>
       </div>
-      <h2 className="bg-white w-full font-bold text-2xl font-roboto capitalize">{title}</h2>
+      <h2 className="bg-white w-full font-bold text-2xl font-roboto capitalize">
+        {title}
+      </h2>
       <img
         className="bg-white border-[3px] border-black w-[350px]  md:w-[400px]"
         src={picture}
         alt="post"
       />
       <div className="card-body bg-white w-full">
-        <p className="bg-white w-full text-sm md:text-lg px-2 text-gray-700 font-roboto" style={{lineHeight:1.3}}>{content}</p>
+        <p
+          className="bg-white w-full text-sm md:text-lg px-2 text-gray-700 font-roboto"
+          style={{ lineHeight: 1.3 }}
+        >
+          {content}
+        </p>
       </div>
     </div>
   );

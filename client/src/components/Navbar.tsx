@@ -30,7 +30,7 @@ export default function Navbar() {
       className="h-[80px] text-5xl font-bold flex justify-between px-10 items-center allura-regular 
     "
     >
-      {isuser && (
+      {onfeed && (
         <motion.button
           initial={{ opacity: 0, x: 100 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -48,7 +48,7 @@ export default function Navbar() {
           Log Out
         </motion.button>
       )}
-      <p className="text-5xl md:w-fit flex justify-center">Melody</p>
+      <p className={`${onfeed?"w-fit":"w-full"} text-5xl flex justify-center`}>Melody</p>
       {onfeed && (
         <motion.button
           initial={{ opacity: 0, x: -100 }}
