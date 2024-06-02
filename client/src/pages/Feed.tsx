@@ -1,9 +1,6 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import throttle from "lodash/throttle";
-import { useSetRecoilState } from "recoil";
-import { isUserAtom } from "@/States/atoms/user-atoms";
-import { verify } from "crypto";
 
 interface PostProps {
   author: {
@@ -38,6 +35,7 @@ export default function Feed() {
       );
       console.log(response)
       if (response.status === 200) {
+        console.log(isUser);
         setIsUser(true);
       }
     } catch (error) {

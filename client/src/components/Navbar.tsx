@@ -1,11 +1,8 @@
-import { isUserAtom } from "@/States/atoms/user-atoms";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
 export default function Navbar() {
   const [onfeed, setOnfeed] = useState(false);
-  const isuser = useRecoilValue(isUserAtom);
 
   useEffect(() => {
     if (window.location.pathname === "/feed") {
@@ -21,7 +18,7 @@ export default function Navbar() {
       localStorage.removeItem("recoil-persist");
       window.location.href = "/";
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -48,7 +45,13 @@ export default function Navbar() {
           Log Out
         </motion.button>
       )}
-      <p className={`${onfeed?"w-fit":"w-full"} text-5xl flex justify-center`}>Melody</p>
+      <p
+        className={`${
+          onfeed ? "w-fit" : "w-fullr"
+        } text-5xl flex justify-center`}
+      >
+        Melody
+      </p>
       {onfeed && (
         <motion.button
           initial={{ opacity: 0, x: -100 }}
