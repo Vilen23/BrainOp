@@ -47,7 +47,7 @@ export default function Navbar() {
       )}
       <p
         className={`${
-          onfeed ? "w-fit" : "w-fullr"
+          onfeed ? "w-fit" : "w-full"
         } text-5xl flex justify-center`}
       >
         Melody
