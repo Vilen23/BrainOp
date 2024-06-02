@@ -5,7 +5,7 @@ export default function Navbar() {
   const [onfeed, setOnfeed] = useState(false);
 
   useEffect(() => {
-    if (window.location.pathname === "/feed") {
+    if (window.location.pathname === "/feed" || window.location.pathname === "/feed/createPost") {
       setOnfeed(true);
     } else {
       setOnfeed(false);
