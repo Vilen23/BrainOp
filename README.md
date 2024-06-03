@@ -10,6 +10,8 @@
 - **Animations**: Framer Motion
 
 ## Features Added
+- Create post (User can create post and post it on the handle)
+- Infinite scroll (On the feed page there is infinite scroll functionality added)
 - Rate limiting to protect the backend from crashes
 - Basic animations using Framer Motion
 - Error handling and display on the frontend
